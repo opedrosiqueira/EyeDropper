@@ -9,11 +9,9 @@ let context;
 
 function screenshot() {
     let region = document.querySelector("body"); // whole screen
-    html2canvas(region, {
-        onrendered: (canvas) => {
-            context = canvas.getContext('2d', { willReadFrequently: true });
-        }
-    });
+    html2canvas(region).then(canvas => {
+        context = canvas.getContext('2d', { willReadFrequently: true })
+    })
 }
 
 function rgbToHex(r, g, b) {
