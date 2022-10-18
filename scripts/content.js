@@ -1,6 +1,8 @@
 /**
  * limitações:
  *  → tira um único screenshot quando abre a página. se a página alterar algum elemento, o screenshot não captura essa mudança. solução: a cada x segundos, tirar um novo screenshot (função setInterval).
+ *  → getImageData é uma operação cara. quem sabe podemos salvar o imageData em cache como em https://github.com/youbastard/getImageData
+ * 
  */
 
 let context;
@@ -24,7 +26,6 @@ document.addEventListener('mousemove', (event) => {
     console.log("body", document.body.scrollHeight, document.body.scrollWidth, "mouse", event.pageY, event.pageX)
 
     if (context) {
-        // observação: getImageData é uma operação cara. quem sabe podemos salvar o imageData em cache como em https://github.com/youbastard/getImageData
         let pixelData = context.getImageData(event.pageX, event.pageY, 1, 1).data;
 
         if (pixelData[0] == 0 && pixelData[1] == 0 && pixelData[2] == 0 && pixelData[3] == 0)
