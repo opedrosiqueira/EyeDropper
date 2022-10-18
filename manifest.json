@@ -1,0 +1,20 @@
+{
+    "manifest_version": 3,
+    "name": "EyeDropper",
+    "version": "0.1",
+    "description": "EyeDropper",
+    "icons": {
+        "128": "images/icon-128.png"
+    },
+    "content_scripts": [
+        {
+            "js": [
+                "scripts/html2canvas.min.js",
+                "scripts/content.js"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        }
+    ]
+}
