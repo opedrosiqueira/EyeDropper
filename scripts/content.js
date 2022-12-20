@@ -5,33 +5,42 @@
  * 
  */
 
+let canvas;
 let context;
 
 function screenshot() {
-    let region = document.querySelector("body"); // whole screen
-    html2canvas(region).then(canvas => {
-        context = canvas.getContext('2d', { willReadFrequently: true })
+    let region = document.body; // whole screen
+    html2canvas(region).then((canvas_) => {
+        // html2canvas(region, { windowWidth: document.body.scrollWidth, windowHeight: document.body.scrollHeight }).then((canvas_) => {
+        canvas = canvas_;
+        context = canvas.getContext('2d', { willReadFrequently: true });
+        console.log("screenshot");
     })
 }
 
-function rgbToHex(r, g, b) {
-    return ((r << 16) | (g << 8) | b).toString(16);
-}
 
-screenshot()
+window.onload = () => {
 
-document.addEventListener('mousemove', (event) => {
-    console.log("body", document.body.scrollHeight, document.body.scrollWidth, "mouse", event.pageY, event.pageX)
+    // setInterval(screenshot, 5000);
+    screenshot();
 
-    if (context) {
-        let pixelData = context.getImageData(event.pageX, event.pageY, 1, 1).data;
+    document.addEventListener('mousemove', (event) => {
+        console.log("body", document.body.scrollWidth, document.body.scrollHeight, "mouse", event.pageX, event.pageY, event.screenX, event.screenY)
 
-        if (pixelData[0] == 0 && pixelData[1] == 0 && pixelData[2] == 0 && pixelData[3] == 0)
-            throw "Transparent color detected, cannot be converted to HEX"
-        if (pixelData[0] > 255 && pixelData[1] > 255 && pixelData[2] > 255)
-            throw "Invalid color component";
+        if (context) {
+            let pixelData = context.getImageData(event.pageX, event.pageY, 1, 1).data;
 
-        let hex = "#" + ("000000" + rgbToHex(pixelData[0], pixelData[1], pixelData[2])).slice(-6);
-        console.log("%c◼◼◼◼◼◼◼◼◼◼◼", "color: " + hex);
-    }
-});
+            console.log("%c◼◼◼◼◼◼◼◼◼◼◼", "color: rgba(" + pixelData[0] + "," + pixelData[1] + "," + pixelData[2] + "," + pixelData[3] + ")");
+        }
+    });
+
+    document.addEventListener("keyup", (event) => {
+        if (event.key == 's') {
+            let dataURL = canvas.toDataURL("image/png");
+            let newTab = window.open('about:blank', 'image from canvas');
+            newTab.document.write("<img src='" + dataURL + "' alt='from canvas'/>");
+        } else if (event.key == 'u') {
+            screenshot();
+        }
+    });
+};
